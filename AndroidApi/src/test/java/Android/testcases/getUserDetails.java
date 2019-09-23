@@ -11,11 +11,8 @@ import io.restassured.specification.RequestSpecification;
 
 public class getUserDetails {
 	@Test
-	public String getUserDetails() {
-		BaseTest bt=new BaseTest();
-		String requestBody[]=bt.setUp();
-		String token =requestBody[0];
-		String id=requestBody[1];
+	public String getUserDetails(String id, String token) {
+	
 		RequestSpecification httprequest=RestAssured.given().
 				header("id",id).
 				header("token",token).

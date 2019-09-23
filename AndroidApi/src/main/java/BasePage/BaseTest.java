@@ -23,15 +23,34 @@ public class BaseTest extends BasePage {
 	//System.out.println("Status code is: "+statusCode);
 	
 	//get token
-	String ar[]=new String[2];
-	ar[0]=response.jsonPath().get("data.token");
-	System.out.println(ar[0]+" is token");
+	String auth[]=new String[2];
+	auth[0]=response.jsonPath().get("data.token");
+	//System.out.println(auth[0]+" is token");
 	//get id
-	ar[1]=response.jsonPath().get("data.id");
-	System.out.println(ar[1]+" is id");
-	return ar;
+	auth[1]=response.jsonPath().get("data.id");
+	//System.out.println(auth[1]+" is id");
+	return auth;
 	}
 	
+	private static final String ALPHA_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	public static String name(int count) {
+	StringBuilder builder = new StringBuilder();
+	while (count-- != 0) {
+	int character = (int)(Math.random()*ALPHA_STRING.length());
+
+	builder.append(ALPHA_STRING.charAt(character));
+	}
+	return builder.toString();
+	}
+	private static final String NUM_STRING = "0123456789";
+	public static String number(int count) {
+	StringBuilder builder = new StringBuilder();
+	while (count-- != 0) {
+	int character = (int)(Math.random()*NUM_STRING.length());
+	builder.append(NUM_STRING.charAt(character));
+	}
+	return builder.toString();
+	}	
 	}
 
 

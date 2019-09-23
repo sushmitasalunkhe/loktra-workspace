@@ -1,5 +1,7 @@
 package Android.testcases;
 
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +24,7 @@ import io.restassured.specification.RequestSpecification;
 public class AddSelfLead extends BaseTest{
 	
 	
-	public  String[] getleadForm(String id,String token){
+	public  String[] getleadForm_s(String id,String token){
 	    	RequestSpecification httprequest=RestAssured.given().
 					header("id",id).
 					header("token",token).
@@ -46,27 +48,10 @@ public class AddSelfLead extends BaseTest{
 	
 	 
 	
-private static final String ALPHA_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-public static String name(int count) {
-StringBuilder builder = new StringBuilder();
-while (count-- != 0) {
-int character = (int)(Math.random()*ALPHA_STRING.length());
 
-builder.append(ALPHA_STRING.charAt(character));
-}
-return builder.toString();
-}
-private static final String NUM_STRING = "0123456789";
-public static String number(int count) {
-StringBuilder builder = new StringBuilder();
-while (count-- != 0) {
-int character = (int)(Math.random()*NUM_STRING.length());
-builder.append(NUM_STRING.charAt(character));
-}
-return builder.toString();
-}	
 	@Test			
 	public  void addSelfLead() {
+		
 		 BaseTest bt=new BaseTest();
 			String requestBody[]=bt.setUp();
 			String token =requestBody[0];
@@ -77,7 +62,7 @@ return builder.toString();
 				header("id",id).
 				header("token",token).
 				header("source","android_app");
-	    		String product[]=sl.getleadForm(id,token);
+	    		String product[]=sl.getleadForm_s(id,token);
 	    		String product_id=product[0];
 	    		String product_name=product[1];
 	    		
@@ -113,7 +98,7 @@ return builder.toString();
 				//get statuscode
 				int statusCode=response.getStatusCode();
 				System.out.println("Status code is: "+statusCode);
-				Assert.assertEquals(statusCode,200);
+				AssertJUnit.assertEquals(statusCode,200);
 	}
 	 
 
