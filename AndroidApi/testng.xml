@@ -3,9 +3,11 @@
 <suite name="Suite">
   <test thread-count="5" name="Test">
     <classes>
-      <class name="Android.testcases.AddReferLead"/>
+      <class name="Android.testcases.Lead.AddSelfLead"/>
       <class name="BasePage.BaseTest"/>
-      <class name="Android.testcases.AddSelfLead"/>
+      <class name="Android.testcases.Lead.UpdateLead"/>
+      <class name="Android.testcases.Lead.AddReferLead"/>
+      <class name="Android.testcases.Login.LoginTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

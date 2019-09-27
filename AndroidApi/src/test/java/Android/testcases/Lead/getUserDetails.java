@@ -1,4 +1,4 @@
-package Android.testcases;
+package Android.testcases.Lead;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -18,13 +18,15 @@ public class getUserDetails {
 				header("token",token).
 				header("source","android_app");
 		Response response=httprequest.request(Method.GET,"/app/profile");
-		String responseBody=response.getBody().asString();
-		String Myproduct=response.jsonPath().getString("data.product_info.display_product_name");
+		/*String responseBody=response.getBody().asString();
+		
 		System.out.println("responseBody is: "+responseBody);
 		//get statuscode
+		
 		int statusCode=response.getStatusCode();
 		System.out.println("Status code is: "+statusCode);
-		Assert.assertEquals(statusCode,200);
+		Assert.assertEquals(statusCode,200);*/
+		String Myproduct=response.jsonPath().getString("data.product_info.display_product_name");
 		return Myproduct;
 		}
 

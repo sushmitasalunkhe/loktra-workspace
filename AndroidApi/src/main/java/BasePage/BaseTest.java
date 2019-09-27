@@ -7,9 +7,9 @@ import io.restassured.specification.RequestSpecification;
 
 public class BaseTest extends BasePage {
 
-	public String[] setUp() {
+	public String [] setUp() {
 	RequestSpecification httprequest=RestAssured.
-			given().contentType("multipart/form-data").multiPart("login_id","system@loktra.com").
+			given().contentType("multipart/form-data").multiPart("login_id","sushmita@loktra.com").
 			multiPart("password","wVKuJyx97M4pUS1imjcxQQ==").
 			multiPart("source","android_app").
 	header("Host","loktra.loktra.com");
@@ -29,7 +29,10 @@ public class BaseTest extends BasePage {
 	//get id
 	auth[1]=response.jsonPath().get("data.id");
 	//System.out.println(auth[1]+" is id");
+
+		
 	return auth;
+	
 	}
 	
 	private static final String ALPHA_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
