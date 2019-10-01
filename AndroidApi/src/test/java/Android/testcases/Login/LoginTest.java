@@ -1,16 +1,26 @@
 package Android.testcases.Login;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.testng.Assert;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
@@ -26,69 +36,67 @@ import io.restassured.specification.RequestSpecification;
 
 public class LoginTest extends BasePage{
 	
-	LoginTest() {
-		super();
-	}
-	HSSFWorkbook workbook;
-    HSSFSheet sheet;
-	HSSFCell cell;
+	
 	@Test
-	public void login() throws IOException, ParseException {
-		 /*File src=new File("/home/ankur-loktra/Documents/testdata/TestData.xls");
-		 FileInputStream finput = new FileInputStream(src);
-		 workbook = new HSSFWorkbook(finput);
-		 sheet= workbook.getSheetAt(0);
-		 System.out.println(sheet.getLastRowNum());
-		 for(int i=1; i<=sheet.getLastRowNum(); i++) {
-			          // Import data for Email.
-			 cell = sheet.getRow(i).getCell(1);
-			 cell.setCellType(CellType.STRING);
-			 String login_id=cell.getStringCellValue();
-			 cell=sheet.getRow(i).getCell(2);
-			 int exp_statusCode=(int) cell.getNumericCellValue();
-			 System.out.println(login_id);*/
-			 //requestobject
+	public void login() throws FileNotFoundException, IOException, ParseException  {
+		Object obj=   new JSONParser().parse(new FileReader("login.json")); 
+		 ArrayList list =  (ArrayList) obj;
+		 for (int i=0;i<list.size();i++) {
+//		 ArrayList<Object> list=new ArrayList<Object>();
+			HashMap<String,Object>m=new HashMap<String,Object>();
+			m.putAll((Map<? extends String, ? extends Object>) list.get(i));
+//			HashMap<String,String>m2=new HashMap<String,String>();
+//			m2.putAll((Map<? extends String, ? extends String>) list.get(1));
+			String login_id=(String) m.get("id");
+			String password=(String) m.get("password");
+			int exp_status=Integer.parseInt((String) m.get("status"));
+			System.out.println();
+		 	System.out.println();
+		 	System.out.println("-----------------------------------------------------------------");
+		 	System.out.println(login_id);
+		 	RequestSpecification httprequest=RestAssured.given().
+		 			contentType("multipart/form-data").
+		 			multiPart("login_id",login_id).
+		 			multiPart("password",password).
+		 			multiPart("source","android_app").
+		 			header("Host","loktra.loktra.com");
+						
+		 		//responseobjectx
+		 	Response response=httprequest.request(Method.POST,"/auth/login");
+		 	String responseBody=response.getBody().asString();
+		 	System.out.println("responseBody is: "+responseBody);
+		 				//get statuscode
+		 	int act_statusCode=response.getStatusCode();
+		 	System.out.println("Status code is: "+act_statusCode);
+		 	AssertJUnit.assertEquals(act_statusCode, exp_status);
+		 	String token =response.jsonPath().get("data.token");
+		 	String id =response.jsonPath().get("data.id");
+		 	LoginTest lt=new LoginTest();
+		 	if(act_statusCode==200) 
+		 	{
+		 		String act_email=lt.getUserDetails(id,token);
+		 	Assert.assertEquals(act_email.toLowerCase(), login_id.toLowerCase());
+		 	}
+		 			}
+	}
+		public String getUserDetails(String id, String token) {
 	
-			ObjectMapper mapper = new ObjectMapper();
-			 HashMap<String, Object> result = mapper.readValue(new File(
-	                    "login.json"), new TypeReference<Map<String, Object>>() {
-	            });
-		//	 System.out.println(result);
-			//JSONObject jsonobject=(JSONObject)obj;
-			Map<String,Object> login=(HashMap<String, Object>) result.get("login");
-			//System.out.println(login);
-			Set setofkeys=login.keySet();
-			//System.out.println(setofkeys);
-						Iterator itr=setofkeys.iterator();
-					while(itr.hasNext()) {
-						System.out.println();
-						System.out.println();
-						System.out.println("-----------------------------------------------------------------");
-							String key=(String) itr.next();	
-							String login_id= (String) login.get(key);
-							 key=(String) itr.next();	
-							String password=(String) login.get(key);
-							key=(String) itr.next();
-							int status_code= Integer.parseInt( (String) login.get(key));
-							System.out.println(login_id);
-			RequestSpecification httprequest=RestAssured.given().
-					contentType("multipart/form-data").
-					multiPart("login_id",login_id).
-					multiPart("password",password).
-					multiPart("source","android_app").
-					header("Host","loktra.loktra.com");
-			
-			//responseobject
-			Response response=httprequest.request(Method.POST,"/auth/login");
-			String responseBody=response.getBody().asString();
-			System.out.println("responseBody is: "+responseBody);
-			//get statuscode
-			int act_statusCode=response.getStatusCode();
-			System.out.println("Status code is: "+act_statusCode);
-			AssertJUnit.assertEquals(act_statusCode, status_code);}
+		 RequestSpecification httprequest=RestAssured.given().
+		 		header("id",id).
+		 		header("token",token).
+		 		header("source","android_app");
+		 Response response=httprequest.request(Method.GET,"/app/profile");
+		 String responseBody=response.getBody().asString();
+		
+		System.out.println("responseBody is: "+responseBody);
+		 //get statuscode
+		
+		 int statusCode=response.getStatusCode();
+		 System.out.println("Status code is: "+statusCode);
+		 Assert.assertEquals(statusCode,200);
+		 String email=response.jsonPath().getString("data.member_info.email");
 		 
-	
-		 
-		 }
+		return email;
+		}
 	
 }

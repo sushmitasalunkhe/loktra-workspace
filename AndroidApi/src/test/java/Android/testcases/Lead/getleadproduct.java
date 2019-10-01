@@ -2,11 +2,15 @@ package Android.testcases.Lead;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.map.LinkedMap;
+import org.json.simple.JSONArray;
 import org.testng.annotations.Test;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -21,7 +25,7 @@ import io.restassured.specification.RequestSpecification;
 
 public class getleadproduct {
 	@Test
-	public void getleadForm() throws JsonGenerationException, JsonMappingException, IOException{
+	public void getLeadproduct() throws JsonGenerationException, JsonMappingException, IOException {
 
 		 BaseTest bt=new BaseTest();
 			String requestBody[]=bt.setUp();
@@ -40,35 +44,56 @@ public class getleadproduct {
 		/*int statusCode=response.getStatusCode();
 		System.out.println("Status code is: "+statusCode);*/
 		String product_list=response.jsonPath().getString("data.display_products_info");
-		LinkedHashMap<String, Object>Product=new LinkedHashMap<String,Object>();
 		
-		LinkedHashMap<String,Object> ProductList_forself=new LinkedHashMap<String,Object>();
-		LinkedHashMap<String,Object> ProductList_forrefer=new LinkedHashMap<String,Object>();
 		getUserDetails ud=new getUserDetails();
 		String user_product=ud.getUserDetails(id,token);
-		String product[]=new String[24];
+//		String product[]=new String[24];
+//		ArrayList<String> product = new ArrayList<>();
+		String product_name;
+		String product_id;
+		List<Object> list=new ArrayList<Object>();
+		List<Object> list_of_self=new ArrayList<Object>();
+		List<Object> list_of_refer=new ArrayList<Object>();
 	for(int i=0;i<24;i++) {
-		String vertical_product_name=response.jsonPath().getString("data.display_products_info["+i+"].vertical_product_name");
-		
+	String vertical_product_name=response.jsonPath().getString("data.display_products_info["+i+"].vertical_product_name");
+		 
 		 if (!user_product.equals(vertical_product_name)){
-		product[0]=response.jsonPath().getString("data.display_products_info["+i+"].display_product_id");
+			
+			 product_name=response.jsonPath().getString("data.display_products_info["+i+"].display_product_name");
+			 product_id=response.jsonPath().getString("data.display_products_info["+i+"].display_product_id");
+//			 product.add(product_name);
+//			 product.add(product_id);
+//			 
+			 LinkedHashMap<String, Object>product1=new LinkedHashMap<String,Object>();
+			     product1.put("product_name", product_name);
+			     product1.put("product_id", product_id);
+			     list_of_refer.add(product1);
+			     
+		
 		//System.out.println("product_id is: "+product[0]);
-		product[1]=response.jsonPath().getString("data.display_products_info["+i+"].display_product_name");
-		//System.out.println("product_name is: "+product[1]);
-		 //JSONArray list = new JSONArray();
-		 ProductList_forrefer.put("product_id "+i,product[0]);
-		 ProductList_forrefer.put("product_name"+i,product[1]);
+//		 //JSONArray list = new JSONArray();
+//		 ProductList_forrefer.put("product_id "+i,product[0]);
+//		 ProductList_forrefer.put("product_name"+i,product[1]);
+
 		 }else {
-				product[i]=response.jsonPath().getString("data.display_products_info["+i+"].display_product_id");
-				ProductList_forself.put("product_id "+i,product[i]);
-			}
+				 product_name=response.jsonPath().getString("data.display_products_info["+i+"].display_product_name");
+				 product_id=response.jsonPath().getString("data.display_products_info["+i+"].display_product_id");
+//				 product.add(product_name);
+//				 product.add(product_id);
+				  
+				 LinkedHashMap<String, Object>product2=new LinkedHashMap<String,Object>();
+			     product2.put("product_name", product_name);
+			     product2.put("product_id", product_id);
+			     list_of_self.add(product2);
+				     // ... continue for all values
 		 }
-	
-	Product.put("Product_s", ProductList_forself);
-	Product.put("Product_r", ProductList_forrefer);
-	        ObjectMapper mapper = new ObjectMapper();
-	       
-	        mapper.writeValue(new File("products.json"), Product);
-	       
+		 }
+	list.add(list_of_self);
+	list.add(list_of_refer);
+ObjectMapper mapper = new ObjectMapper();
+    
+    mapper.writeValue(new File("products.json"), list);
+
+	        
 }
 }

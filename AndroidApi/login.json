@@ -1,31 +1,32 @@
-{
-  "login": {
-    "login_id0": "system@loktra.com",
-    "password0": "wVKuJyx97M4pUS1imjcxQQ==",
-    "status_code0": "200",
-    "login_id1": "sushmita@loktra.com",
-    "password1": "wVKuJyx97M4pUS1imjcxQQ==",
-    "status_code1": "200",
-    "login_id2": "9867530069",
-    "password2": "wVKuJyx97M4pUS1imjcxQQ==",
-    "status_code2": "200",
-    "login_id3": "9999999999",
-    "password3": "wVKuJyx97M4pUS1imjcxQQ==",
-    "status_code3": "200",
-    "login_id4": "123099",
-    "password4": "wVKuJyx97M4pUS1imjcxQQ==",
-    "status_code4": "200",
-    "login_id5": "999001",
-    "password5": "wVKuJyx97M4pUS1imjcxQQ==",
-    "status_code5": "200",
-    "login_id6": "Sushmita",
-    "password6": "wVKuJyx97M4pUS1imjcxQQ==",
-    "status_code6": "404",
-     "login_id7": "919867530069",
-    "password7": "wVKuJyx97M4pUS1imjcxQQ==",
-    "status_code7": "404",
-     "login_id8": " ",
-    "password8": "wVKuJyx97M4pUS1imjcxQQ==",
-    "status_code8": "404"
-  }
-}
+    [
+        {
+            "id":"system@loktra.com",
+            "password": "wVKuJyx97M4pUS1imjcxQQ==",
+            "status": "200"
+        },
+        {
+            "id":"Sushmita",
+            "password": "wVKuJyx97M4pUS1imjcxQQ==",
+            "status": "404"
+        },
+        {
+            "id":"Sushmita@loktra.com",
+            "password": "wVKuJyx97M4pUS1imjcxQQ==",
+            "status": "200"
+        },
+        {
+            "id":" ",
+            "password": "wVKuJyx97M4pUS1imjcxQQ==",
+            "status": "404"
+        },
+        {
+            "id":"System@loktra.com",
+            "password": "loktra@123",
+            "status": "404"
+        },
+        {
+            "id":"Sushmita@loktra.com",
+            "password": " ",
+            "status": "404"
+        }
+    ]

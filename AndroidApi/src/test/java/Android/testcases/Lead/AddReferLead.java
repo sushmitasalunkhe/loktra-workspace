@@ -1,13 +1,18 @@
 package Android.testcases.Lead;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
@@ -25,32 +30,31 @@ import io.restassured.specification.RequestSpecification;
 public class AddReferLead extends BaseTest {
 	
 	@Test
-	public void AddreferLead() throws JsonParseException, JsonMappingException, IOException {
+	public void AddreferLead() throws JsonParseException, JsonMappingException, IOException, ParseException {
 		getUserDetails ud=new getUserDetails();
 		
 		 BaseTest bt=new BaseTest();
 			String requestBody[]=bt.setUp();
 			String token =requestBody[0];
 			String id=requestBody[1];
-			ObjectMapper mapper = new ObjectMapper();
-			 HashMap<String, Object> result = mapper.readValue(new File(
-	                  "products.json"), new TypeReference<Map<String, Object>>() {
-	          });
-		//	 System.out.println(result);
-			//JSONObject jsonobject=(JSONObject)obj;
-			Map<String,Object> product=(HashMap<String, Object>) result.get("Product_r");
-			//System.out.println(login);
-			Set setofkeys=product.keySet();
-			//System.out.println(setofkeys);
-						Iterator itr=setofkeys.iterator();
-					while(itr.hasNext()) {
+			Object obj=   new JSONParser().parse(new FileReader("products1.json")); 
+			List<Object> list_of_self=(List<Object>) obj;
+			 //System.out.println(list_of_self);
+			 
+			 ArrayList list =  (ArrayList) list_of_self.get(1);
+//			 System.out.println(list);
+//			 System.out.println(list.size());
+		
+			 for (int j=0;j<list.size();j++) {
+				 
+//			 ArrayList<Object> list=new ArrayList<Object>();
+				HashMap<String,Object>m=new HashMap<String,Object>();
+				m.putAll((Map<? extends String, ? extends Object>) list.get(j));
+				String product_id=(String) m.get("product_id");
+				String product_name=(String) m.get("product_name");
 						System.out.println();
 						System.out.println();
 						System.out.println("-----------------------------------------------------------------");
-							String key=(String) itr.next();	
-							String product_id= (String) product.get(key);
-							key=(String) itr.next();
-							String product_name=(String) product.get(key);
 							
 							System.out.println("product name is: "+product_name);
 			

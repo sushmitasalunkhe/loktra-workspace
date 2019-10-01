@@ -2,16 +2,16 @@
 <testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2019-09-27T15:08:53 IST" name="Default suite" finished-at="2019-09-27T15:08:56 IST" duration-ms="3550">
+  <suite started-at="2019-10-01T16:35:13 IST" name="Default suite" finished-at="2019-10-01T16:35:21 IST" duration-ms="8192">
     <groups>
     </groups>
-    <test started-at="2019-09-27T15:08:53 IST" name="Default test" finished-at="2019-09-27T15:08:56 IST" duration-ms="3550">
-      <class name="Android.testcases.Login.LoginTest">
-        <test-method signature="login()[pri:0, instance:Android.testcases.Login.LoginTest@41294f8]" started-at="2019-09-27T15:08:53 IST" name="login" finished-at="2019-09-27T15:08:56 IST" duration-ms="3509" status="PASS">
+    <test started-at="2019-10-01T16:35:13 IST" name="Default test" finished-at="2019-10-01T16:35:21 IST" duration-ms="8192">
+      <class name="Android.testcases.Lead.UpdateLead">
+        <test-method signature="updateLead()[pri:0, instance:Android.testcases.Lead.UpdateLead@23282c25]" started-at="2019-10-01T16:35:13 IST" name="updateLead" finished-at="2019-10-01T16:35:21 IST" duration-ms="8147" status="PASS">
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- login -->
-      </class> <!-- Android.testcases.Login.LoginTest -->
+        </test-method> <!-- updateLead -->
+      </class> <!-- Android.testcases.Lead.UpdateLead -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->
 </testng-results>

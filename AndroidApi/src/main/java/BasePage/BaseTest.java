@@ -9,7 +9,7 @@ public class BaseTest extends BasePage {
 
 	public String [] setUp() {
 	RequestSpecification httprequest=RestAssured.
-			given().contentType("multipart/form-data").multiPart("login_id","sushmita@loktra.com").
+			given().contentType("multipart/form-data").multiPart("login_id","system@loktra.com").
 			multiPart("password","wVKuJyx97M4pUS1imjcxQQ==").
 			multiPart("source","android_app").
 	header("Host","loktra.loktra.com");

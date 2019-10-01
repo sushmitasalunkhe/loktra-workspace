@@ -1,0 +1,32 @@
+	[
+	    {
+	        "id":"system@loktra.com",
+	        "password": "wVKuJyx97M4pUS1imjcxQQ==",
+	        "status": "200"
+	    },
+	    {
+	        "id":"Sushmita",
+	        "password": "wVKuJyx97M4pUS1imjcxQQ==",
+	        "status": "404"
+	    },
+	    {
+	        "id":"Sushmita@loktra.com",
+	        "password": "wVKuJyx97M4pUS1imjcxQQ==",
+	        "status": "200"
+	    },
+	    {
+	        "id":" ",
+	        "password": "wVKuJyx97M4pUS1imjcxQQ==",
+	        "status": "404"
+	    },
+	    {
+	        "id":"System@loktra.com",
+	        "password": "loktra@123",
+	        "status": "404"
+	    },
+	    {
+	        "id":"Sushmita@loktra.com",
+	        "password": " ",
+	        "status": "404"
+	    }
+	]

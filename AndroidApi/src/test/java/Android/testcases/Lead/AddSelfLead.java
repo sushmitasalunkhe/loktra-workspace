@@ -1,13 +1,18 @@
 package Android.testcases.Lead;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
@@ -24,34 +29,49 @@ import io.restassured.specification.RequestSpecification;
 
 public class AddSelfLead extends BaseTest{
 	
+	
+	
 	@Test			
-	public  void addSelfLead() throws JsonParseException, JsonMappingException, IOException {
+	public  void addSelfLead() throws JsonParseException, JsonMappingException, IOException, ParseException {
 		
 		BaseTest bt=new BaseTest();
 		String requestBody[]=bt.setUp();
 		String token =requestBody[0];
 		String id=requestBody[1];
+		Object obj=   new JSONParser().parse(new FileReader("products1.json")); 
+		List<Object> list_of_self=(List<Object>) obj;
+		 //System.out.println(list_of_self);
+		 
+		 ArrayList list =  (ArrayList) list_of_self.get(0);
+//		 System.out.println(list);
+//		 System.out.println(list.size());
 	
-		ObjectMapper mapper = new ObjectMapper();
-		 HashMap<String, Object> result = mapper.readValue(new File(
-                  "products.json"), new TypeReference<Map<String, Object>>() {
-          });
-	//	 System.out.println(result);
-		//JSONObject jsonobject=(JSONObject)obj;
-		Map<String,Object> product=(HashMap<String, Object>) result.get("Product_s");
-		//System.out.println(login);
-		Set setofkeys=product.keySet();
-		//System.out.println(setofkeys);
-					Iterator itr=setofkeys.iterator();
-				while(itr.hasNext()) {
+		 for (int j=0;j<list.size();j++) {
+			 
+//		 ArrayList<Object> list=new ArrayList<Object>();
+			HashMap<String,Object>m=new HashMap<String,Object>();
+			m.putAll((Map<? extends String, ? extends Object>) list.get(j));
+			String product_id=(String) m.get("product_id");
+			
+			
+			//String login_id=(String) m.get("id");
+	
+//		ObjectMapper mapper = new ObjectMapper();
+//		 HashMap<String, Object> result = mapper.readValue(new File(
+//                  "products.json"), new TypeReference<Map<String, Object>>() {
+//          });
+//	//	 System.out.println(result);
+//		//JSONObject jsonobject=(JSONObject)obj;
+//		Map<String,Object> product=(HashMap<String, Object>) result.get("Product_s");
+//		//System.out.println(login);
+//		Set setofkeys=product.keySet();
+//		//System.out.println(setofkeys);
+//					Iterator itr=setofkeys.iterator();
+//				while(itr.hasNext()) {
 					System.out.println();
 					System.out.println();
 					System.out.println("-----------------------------------------------------------------");
-						String key=(String) itr.next();	
-						String product_id= (String) product.get(key);
-						System.out.println(product_id);
-		
-		 
+					System.out.println(m.get("product_name"));
 		RequestSpecification httprequest=RestAssured.given().contentType("application/json").
 				header("id",id).
 				header("token",token).
@@ -61,7 +81,7 @@ public class AddSelfLead extends BaseTest{
 	    		String product_name=product[1];*/
 	    		
 	    		String name=name(5)+" "+name(5);
-	    		String number="9"+number(9);
+	    		String number="8"+number(9);
 	    		
 		
 		      	//Map<String, Object> requestparams = new HashMap<>();
@@ -107,6 +127,9 @@ public class AddSelfLead extends BaseTest{
 				AssertJUnit.assertEquals(act_status, exp_status);}
 				
 	} 
+	
+
+
 
 	public String[] getnewlead_s(String id,String token) {
 		RequestSpecification httprequest=RestAssured.given().

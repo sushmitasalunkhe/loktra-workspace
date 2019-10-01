@@ -1,6 +1,12 @@
 package Android.testcases.Lead;
 
 import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 import org.testng.AssertJUnit;
@@ -8,9 +14,19 @@ import org.testng.annotations.Test;
 
 import org.testng.annotations.Test;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -21,7 +37,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public class UpdateLead {
-	public String[] getnewlead_s(String id,String token) {
+	public String[] getnewlead_s(String id,String token,int i) {
 		RequestSpecification httprequest=RestAssured.given().
 				header("id",id).
 				header("token",token).
@@ -39,10 +55,11 @@ public class UpdateLead {
 		int statusCode=response.getStatusCode();
 		System.out.println("Status code is: "+statusCode);*/
 		String act[]=new String[4];
-		act[0]=response.jsonPath().getString("data.lead_details[0].customer_data.name");
-		act[1]=response.jsonPath().getString("data.lead_details[0].customer_data.contact");
-		act[2]=response.jsonPath().getString("data.lead_details[0].status_name");
-		act[3]=response.jsonPath().getString("data.lead_details[0].lead_id");
+		
+		act[0]=response.jsonPath().getString("data.lead_details["+i+"].customer_data.name");
+		act[1]=response.jsonPath().getString("data.lead_details["+i+"].customer_data.contact");
+		act[2]=response.jsonPath().getString("data.lead_details["+i+"].status_name");
+		act[3]=response.jsonPath().getString("data.lead_details["+i+"].lead_id");
 		System.out.println("act_name: "+act[0]);
 		System.out.println("act_number: "+act[1]);
 		//System.out.println("act_status : "+act[2]);
@@ -50,21 +67,36 @@ public class UpdateLead {
 	}
 	
 	@Test
-	public void updateLead() {
+	public void updateLead() throws JsonParseException, JsonMappingException, IOException, ParseException {
 		
-
+	
 	 BaseTest bt=new BaseTest();
 		String requestBody[]=bt.setUp();
 		String token =requestBody[0];
 		String id=requestBody[1];
-	UpdateLead ul=new UpdateLead();
-	String act[]=ul.getnewlead_s(id, token);
-	String lead_id=act[3];
-	System.out.println("lead id is: "+act[3]);
+	
 	long now = Instant.now().toEpochMilli();
 	long follow_up_time=now+200000000;
-	System.out.println(follow_up_time);
-	RequestSpecification httprequest=RestAssured.given().contentType("application/json").
+	//System.out.println(follow_up_time);
+	Object obj=   new JSONParser().parse(new FileReader("updateLead.json")); 
+	 ArrayList list =  (ArrayList) obj;
+	 for (int i=0;i<list.size();i++) {
+//	 					
+			HashMap<String,Object>m=new HashMap<String,Object>();
+			m.putAll((Map<? extends String, ? extends Object>) list.get(i));
+	//		HashMap<String,String>m2=new HashMap<String,String>();
+	//		m2.putAll((Map<? extends String, ? extends String>) list.get(1));
+			String status_id=(String) m.get("status_id");
+			String reject_id=(String) m.get("reject_id");
+			String status=(String) m.get("status");
+			System.out.println();
+			System.out.println();
+			System.out.println("-----------------------------------------------------------------");
+			UpdateLead ul=new UpdateLead();
+			String act[]=ul.getnewlead_s(id, token,i);
+			String lead_id=act[3];
+			System.out.println("lead id is: "+act[3]);				
+				RequestSpecification httprequest=RestAssured.given().contentType("application/json").
 			header("id",id).
 			header("token",token).
 			header("source","android_app");
@@ -73,14 +105,14 @@ public class UpdateLead {
 			JSONObject form_data = new JSONObject();
 			form_data.put("schedule_start_date_time",follow_up_time);
 			form_data.put("follow_up_type", "meeting");
-			form_data.put("fos_reason_id", "");
+			form_data.put("fos_reason_id", reject_id);
 			requestparams.put("form_data", form_data);
 			requestparams.put("action_time",0);
 			requestparams.put("comment_time",0);
 			requestparams.put("form_schema_id",""); 
 			requestparams.put("follow_time",0);
 			requestparams.put("lead_id",lead_id);
-			requestparams.put("status_id","e33357fd-23e4-4510-aa94-8f49763c29e8");
+			requestparams.put("status_id",status_id);
 			requestparams.put("type","status");
 			
 			httprequest.body(requestparams.toJSONString()).contentType("application/json");
@@ -93,9 +125,11 @@ public class UpdateLead {
 			AssertJUnit.assertEquals(statusCode,200);
 			UpdateLead u2=new UpdateLead();
 			String act_status=u2.getUpdatednewlead(id, token,lead_id);
-			String exp_status="Exec Follow Up";
+			String exp_status=status;
 			//System.out.println("act_status : "+act_status);
 			AssertJUnit.assertEquals(act_status, exp_status);
+			
+			}
 			}
 	public String getUpdatednewlead(String id,String token,String lead_id) {
 		
