@@ -4,6 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import BasePage.BaseTest;
+import PageObjects.Lead.LeadPage;
 import io.restassured.RestAssured;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
@@ -11,12 +12,10 @@ import io.restassured.specification.RequestSpecification;
 
 public class getUserDetails {
 	@Test
-	public String getUserDetails(String id, String token) {
-	
-		RequestSpecification httprequest=RestAssured.given().
-				header("id",id).
-				header("token",token).
-				header("source","android_app");
+	public String getUserDetails() {
+
+		LeadPage sl=new LeadPage();
+		RequestSpecification httprequest= sl.getHttprequest();
 		Response response=httprequest.request(Method.GET,"/app/profile");
 		/*String responseBody=response.getBody().asString();
 		

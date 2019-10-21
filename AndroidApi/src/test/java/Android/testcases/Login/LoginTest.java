@@ -1,5 +1,11 @@
 package Android.testcases.Login;
 
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,6 +33,7 @@ import org.testng.annotations.Test;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import Android.testcases.Lead.getUserDetails;
 import BasePage.BasePage;
 import io.restassured.RestAssured;
 import io.restassured.http.Method;
@@ -39,6 +46,9 @@ public class LoginTest extends BasePage{
 	
 	@Test
 	public void login() throws FileNotFoundException, IOException, ParseException  {
+	
+		System.out.println("testcase running is : "+LoginTest.class.getSimpleName());
+
 		Object obj=   new JSONParser().parse(new FileReader("login.json")); 
 		 ArrayList list =  (ArrayList) obj;
 		 for (int i=0;i<list.size();i++) {
@@ -53,21 +63,20 @@ public class LoginTest extends BasePage{
 			System.out.println();
 		 	System.out.println();
 		 	System.out.println("-----------------------------------------------------------------");
-		 	System.out.println(login_id);
 		 	RequestSpecification httprequest=RestAssured.given().
-		 			contentType("multipart/form-data").
-		 			multiPart("login_id",login_id).
-		 			multiPart("password",password).
-		 			multiPart("source","android_app").
-		 			header("Host","loktra.loktra.com");
+		 	contentType("multipart/form-data").
+		 	multiPart("login_id",login_id).
+		 	multiPart("password",password).
+		 	multiPart("source","android_app").
+		    header("Host","loktra.loktra.com");
 						
 		 		//responseobjectx
 		 	Response response=httprequest.request(Method.POST,"/auth/login");
 		 	String responseBody=response.getBody().asString();
-		 	System.out.println("responseBody is: "+responseBody);
-		 				//get statuscode
+		 	System.out.println(login_id);
+		 	System.out.println("responseBody for login is: "+responseBody);
 		 	int act_statusCode=response.getStatusCode();
-		 	System.out.println("Status code is: "+act_statusCode);
+		 	System.out.println("Status code for login is: "+act_statusCode);
 		 	AssertJUnit.assertEquals(act_statusCode, exp_status);
 		 	String token =response.jsonPath().get("data.token");
 		 	String id =response.jsonPath().get("data.id");
@@ -75,25 +84,25 @@ public class LoginTest extends BasePage{
 		 	if(act_statusCode==200) 
 		 	{
 		 		String act_email=lt.getUserDetails(id,token);
-		 	Assert.assertEquals(act_email.toLowerCase(), login_id.toLowerCase());
+		 	AssertJUnit.assertEquals(act_email.toLowerCase(), login_id.toLowerCase());
 		 	}
 		 			}
 	}
 		public String getUserDetails(String id, String token) {
 	
 		 RequestSpecification httprequest=RestAssured.given().
-		 		header("id",id).
+		        header("id",id).
 		 		header("token",token).
 		 		header("source","android_app");
 		 Response response=httprequest.request(Method.GET,"/app/profile");
 		 String responseBody=response.getBody().asString();
 		
-		System.out.println("responseBody is: "+responseBody);
+		 System.out.println("responseBody for userdetails is: "+responseBody);
 		 //get statuscode
 		
 		 int statusCode=response.getStatusCode();
-		 System.out.println("Status code is: "+statusCode);
-		 Assert.assertEquals(statusCode,200);
+		 System.out.println("Status code for userdetails is: "+statusCode);
+		 AssertJUnit.assertEquals(statusCode,200);
 		 String email=response.jsonPath().getString("data.member_info.email");
 		 
 		return email;

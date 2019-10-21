@@ -1,5 +1,11 @@
 package Android.testcases.Lead;
 
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import BasePage.BaseTest;
+import PageObjects.Lead.LeadPage;
 import io.restassured.RestAssured;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
@@ -33,65 +40,29 @@ public class AddSelfLead extends BaseTest{
 	
 	@Test			
 	public  void addSelfLead() throws JsonParseException, JsonMappingException, IOException, ParseException {
-		
-		BaseTest bt=new BaseTest();
-		String requestBody[]=bt.setUp();
-		String token =requestBody[0];
-		String id=requestBody[1];
-		Object obj=   new JSONParser().parse(new FileReader("products1.json")); 
+		System.out.println("testcase running is : "+AddSelfLead.class.getSimpleName());
+		Object obj=   new JSONParser().parse(new FileReader("products.json")); 
 		List<Object> list_of_self=(List<Object>) obj;
-		 //System.out.println(list_of_self);
-		 
-		 ArrayList list =  (ArrayList) list_of_self.get(0);
-//		 System.out.println(list);
-//		 System.out.println(list.size());
-	
-		 for (int j=0;j<list.size();j++) {
-			 
-//		 ArrayList<Object> list=new ArrayList<Object>();
+		ArrayList list =  (ArrayList) list_of_self.get(0);
+		for (int j=0;j<list.size();j++) {
 			HashMap<String,Object>m=new HashMap<String,Object>();
 			m.putAll((Map<? extends String, ? extends Object>) list.get(j));
 			String product_id=(String) m.get("product_id");
-			
-			
-			//String login_id=(String) m.get("id");
-	
-//		ObjectMapper mapper = new ObjectMapper();
-//		 HashMap<String, Object> result = mapper.readValue(new File(
-//                  "products.json"), new TypeReference<Map<String, Object>>() {
-//          });
-//	//	 System.out.println(result);
-//		//JSONObject jsonobject=(JSONObject)obj;
-//		Map<String,Object> product=(HashMap<String, Object>) result.get("Product_s");
-//		//System.out.println(login);
-//		Set setofkeys=product.keySet();
-//		//System.out.println(setofkeys);
-//					Iterator itr=setofkeys.iterator();
-//				while(itr.hasNext()) {
-					System.out.println();
-					System.out.println();
-					System.out.println("-----------------------------------------------------------------");
-					System.out.println(m.get("product_name"));
-		RequestSpecification httprequest=RestAssured.given().contentType("application/json").
-				header("id",id).
-				header("token",token).
-				header("source","android_app");
-	    		/*String product[]=sl.getleadForm_s(id,token);
-	    		String product_id=product[0];
-	    		String product_name=product[1];*/
-	    		
-	    		String name=name(5)+" "+name(5);
-	    		String number="8"+number(9);
-	    		
-		
-		      	//Map<String, Object> requestparams = new HashMap<>();
-				 JSONObject requestparams=new JSONObject();
-				JSONObject product_additional_info_v2 = new JSONObject();
-				 product_additional_info_v2.put("lead_priority", "Hot");
-				 product_additional_info_v2.put("lead_source", "anglelist");
-				 product_additional_info_v2.put("shop_ownership", "Parental");
-				 product_additional_info_v2.put("residence_ownership", "Owned");
-				 product_additional_info_v2.put("lead_type", "Normal");
+			System.out.println();
+			System.out.println();
+			System.out.println("-----------------------------------------------------------------");
+			System.out.println(m.get("product_name"));
+			LeadPage sl=new LeadPage();
+			RequestSpecification httprequest= sl.getHttprequest();
+			String name=name(5)+" "+name(5);
+			String number="8"+number(9);
+	    	JSONObject requestparams=new JSONObject();
+	    	JSONObject product_additional_info_v2 = new JSONObject();
+	    		product_additional_info_v2.put("lead_priority", "Hot");
+				product_additional_info_v2.put("lead_source", "anglelist");
+				product_additional_info_v2.put("shop_ownership", "Parental");
+				product_additional_info_v2.put("residence_ownership", "Owned");
+				product_additional_info_v2.put("lead_type", "Normal");
 				requestparams.put("product_additional_info_v2", product_additional_info_v2);
 				requestparams.put("contact",number);
 				requestparams.put("client_photo_tags","");
@@ -103,10 +74,8 @@ public class AddSelfLead extends BaseTest{
 				requestparams.put("product_id",product_id);
 				//requestparams.put("product_id","Support Queries");
 				requestparams.put("follow_up",0);
-	    		
-	    		
-				httprequest.body(requestparams.toJSONString()).contentType("application/json");
-				Response response=httprequest.request(Method.POST,"/app/self-lead-v2");
+			httprequest.body(requestparams.toJSONString()).contentType("application/json");
+			Response response=httprequest.request(Method.POST,"/app/self-lead-v2");
 				String responseBody=response.getBody().asString();
 				System.out.println("responseBody of add self lead is: "+responseBody);
 				//get statuscode
@@ -114,7 +83,7 @@ public class AddSelfLead extends BaseTest{
 				System.out.println("Status code is: "+statusCode);
 				AssertJUnit.assertEquals(statusCode,200);
 				AddSelfLead s2=new AddSelfLead();
-				String act[]=s2.getnewlead_s(id,token);
+				String act[]=s2.getnewlead_s();
 				String exp_name=name;
 				String exp_number=number;
 				String exp_status="Exec Approved";
@@ -124,21 +93,18 @@ public class AddSelfLead extends BaseTest{
 				System.out.println("lead id is: "+act[3]);
 				AssertJUnit.assertEquals(act_name,exp_name);
 				AssertJUnit.assertEquals(act_number,exp_number);
-				AssertJUnit.assertEquals(act_status, exp_status);}
+				AssertJUnit.assertEquals(act_status, exp_status);
+				}
 				
 	} 
 	
 
 
 
-	public String[] getnewlead_s(String id,String token) {
-		RequestSpecification httprequest=RestAssured.given().
-				header("id",id).
-				header("token",token).
-				header("source","android_app").
-				header("Host","loktra.loktra.com").
-				header("Referer","https://loktra.loktra.com/source-manager-leads").
-				queryParam("type", "assign").
+	public String[] getnewlead_s() {
+		LeadPage sl=new LeadPage();
+		RequestSpecification httprequest= sl.getHttprequest();
+		httprequest.queryParam("type", "assign").
 				queryParam("tab_name", "fresh_leads").
 				queryParam("sub_tab", "all").
 				queryParam("page_number", "1");

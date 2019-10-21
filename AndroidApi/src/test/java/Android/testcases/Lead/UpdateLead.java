@@ -1,6 +1,6 @@
 package Android.testcases.Lead;
 
-import org.testng.annotations.Test;
+
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,23 +31,23 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import BasePage.BaseTest;
+import PageObjects.Lead.LeadPage;
 import io.restassured.RestAssured;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public class UpdateLead {
-	public String[] getnewlead_s(String id,String token,int i) {
-		RequestSpecification httprequest=RestAssured.given().
-				header("id",id).
-				header("token",token).
-				header("source","android_app").
-				header("Host","loktra.loktra.com").
-				header("Referer","https://loktra.loktra.com/source-manager-leads").
-				queryParam("type", "assign").
+	
+	public String[] getnewlead_s(int i) {
+		
+		LeadPage sl=new LeadPage();
+		RequestSpecification httprequest= sl.getHttprequest();
+		httprequest.queryParam("type", "assign").
 				queryParam("tab_name", "fresh_leads").
 				queryParam("sub_tab", "all").
-				queryParam("page_number", "1");
+				queryParam("page_number", "1").queryParam("page_size", "20");
+		
 		Response response=httprequest.request(Method.GET,"/app/lead/details-v3");
 	/*	String responseBody=response.getBody().asString();
 		System.out.println("responseBody of new lead is: "+responseBody);
@@ -68,19 +68,14 @@ public class UpdateLead {
 	
 	@Test
 	public void updateLead() throws JsonParseException, JsonMappingException, IOException, ParseException {
-		
-	
-	 BaseTest bt=new BaseTest();
-		String requestBody[]=bt.setUp();
-		String token =requestBody[0];
-		String id=requestBody[1];
-	
-	long now = Instant.now().toEpochMilli();
-	long follow_up_time=now+200000000;
+		System.out.println("testcase running is : "+UpdateLead.class.getSimpleName());
+		long now = Instant.now().toEpochMilli();
+		long follow_up_time=now+200000000;
 	//System.out.println(follow_up_time);
-	Object obj=   new JSONParser().parse(new FileReader("updateLead.json")); 
-	 ArrayList list =  (ArrayList) obj;
-	 for (int i=0;i<list.size();i++) {
+		Object obj=   new JSONParser().parse(new FileReader("updateLead.json")); 
+		ArrayList list =  (ArrayList) obj;
+	 
+		for (int i=0;i<list.size();i++) {
 //	 					
 			HashMap<String,Object>m=new HashMap<String,Object>();
 			m.putAll((Map<? extends String, ? extends Object>) list.get(i));
@@ -93,13 +88,12 @@ public class UpdateLead {
 			System.out.println();
 			System.out.println("-----------------------------------------------------------------");
 			UpdateLead ul=new UpdateLead();
-			String act[]=ul.getnewlead_s(id, token,i);
+			String act[]=ul.getnewlead_s(i);
 			String lead_id=act[3];
-			System.out.println("lead id is: "+act[3]);				
-				RequestSpecification httprequest=RestAssured.given().contentType("application/json").
-			header("id",id).
-			header("token",token).
-			header("source","android_app");
+			System.out.println("lead id is: "+act[3]);	
+			LeadPage sl=new LeadPage();
+			RequestSpecification httprequest= sl.getHttprequest();
+		
 	      	//Map<String, Object> requestparams = new HashMap<>();
 			 JSONObject requestparams=new JSONObject();
 			JSONObject form_data = new JSONObject();
@@ -124,22 +118,18 @@ public class UpdateLead {
 			System.out.println("Status code is: "+statusCode);
 			AssertJUnit.assertEquals(statusCode,200);
 			UpdateLead u2=new UpdateLead();
-			String act_status=u2.getUpdatednewlead(id, token,lead_id);
+			String act_status=u2.getUpdatednewlead(lead_id);
 			String exp_status=status;
 			//System.out.println("act_status : "+act_status);
 			AssertJUnit.assertEquals(act_status, exp_status);
 			
 			}
 			}
-	public String getUpdatednewlead(String id,String token,String lead_id) {
+	public String getUpdatednewlead(String lead_id) {
 		
-			RequestSpecification httprequest=RestAssured.given().
-					header("id",id).
-					header("token",token).
-					header("source","android_app").
-					header("Host","loktra.loktra.com").
-					header("Referer","https://loktra.loktra.com/source-manager-leads").
-					queryParam("type", "assign").
+		LeadPage sl=new LeadPage();
+		RequestSpecification httprequest= sl.getHttprequest();
+		httprequest.queryParam("type", "assign").
 					queryParam("tab_name", "fresh_leads").
 					queryParam("sub_tab", "all").
 					queryParam("page_number", "1").

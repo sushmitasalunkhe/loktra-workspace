@@ -3,11 +3,11 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="Android.testcases.Login.LoginTest">
+      <class name="Android.testcases.Lead.getReferLeads">
         <methods>
-          <include name="login"/>
+          <include name="getLeads"/>
         </methods>
-      </class> <!-- Android.testcases.Login.LoginTest -->
+      </class> <!-- Android.testcases.Lead.getReferLeads -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->
